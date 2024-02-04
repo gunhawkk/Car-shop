@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Car Rent Shop</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      function msg() {
+        alert("Welcome To Our Car Rent Shop");
+      }
+      var arrInfo = new Array();
+      var i = 0;
+
+      function reqInformation() {
+        var mark = rent.mark.value;
+        var mark_type = rent.marktype.value;
+        var year = rent.year.value;
+        var plate = rent.plate.value;
+        var amount = rent.amount.value;
+        var errors = 0;
+
+        if (plate == "") {
+          plateNbDiv.style.visibility = "visible";
+          errors++;
+        } else {
+          plateNbDiv.style.visibility = "hidden";
+        }
+        if (mark == "" || mark == "Choose...") {
+          markDiv.style.visibility = "visible";
+          errors++;
+        } else {
+          markDiv.style.visibility = "hidden";
+        }
+        if (mark_type == "" || mark_type == "Choose...") {
+          marktypeDiv.style.visibility = "visible";
+          errors++;
+        } else {
+          marktypeDiv.style.visibility = "hidden";
+        }
+        if (year == "") {
+          yearDiv.style.visibility = "visible";
+          errors++;
+        } else {
+          yearDiv.style.visibility = "hidden";
+        }
+        if (errors == 0) {
+          clientInfo.style.visibility = "visible";
+        } else {
+          clientInfo.style.visibility = "hidden";
+        }
+      }
+
+      function showSlectedMark() {
+        var markTypeDropdown = document.getElementById("marktype");
+        var selectedMark = document.getElementById("mark").value;
+
+        // Clear previous options
+        markTypeDropdown.innerHTML = "<option selected>Choose...</option>";
+
+        if (selectedMark == "BMW") {
+          // If BMW is selected, add BMW model options
+          var bmwModels = [
+            "M2",
+            "M3 Coupe",
+            "M4 Convertible",
+            "M8 Coupe",
+            "M8 Convertible",
+            "M8 Gran Coupe",
+            "X3 M",
+          ];
+
+          for (var i = 0; i < bmwModels.length; i++) {
+            var option = document.createElement("option");
+            option.text = bmwModels[i];
+            markTypeDropdown.add(option);
+          }
+        } else if (selectedMark == "Mercedes") {
+          // If Mercedes is selected, add Mercedes model options
+          var mercedesModels = [
+            "Mercedes-Benz EQA restyling",
+            "Mercedes-Benz EQB restyling",
+            "Mercedes-Benz CLA",
+            "Mercedes-AMG CLE 63",
+            "Mercedes-Benz CLE Convertible",
+            "Mercedes-AMG GLC 43 and 63 Coupe",
+            "Mercedes-Benz E-Class All-Terrain",
+            "Mercedes-AMG E 53",
+          ]; // Add your Mercedes models
+
+          for (var i = 0; i < mercedesModels.length; i++) {
+            var option = document.createElement("option");
+            option.text = mercedesModels[i];
+            markTypeDropdown.add(option);
+          }
+        }
+      }
+
+      function setAmount() {
+        var markTypeDropdown = document.getElementById("marktype");
+        var amountInput = document.getElementById("amount");
+
+        // Set the amount based on the selected marktype
+        var selectedMarkType = markTypeDropdown.value;
+
+        if (selectedMarkType == "M2" || selectedMarkType == "M3 Coupe") {
+          amountInput.value = "20,000 $";
+        } else if (
+          selectedMarkType == "X3 M" ||
+          selectedMarkType == "Mercedes-Benz EQA restyling"
+        ) {
+          amountInput.value = "25,000 $";
+        } else if (
+          selectedMarkType == "M4 Convertible" ||
+          selectedMarkType == "Mercedes-Benz EQB restyling"
+        ) {
+          amountInput.value = "45,000 $";
+        } else if (
+          selectedMarkType == "Mercedes-Benz CLA" ||
+          selectedMarkType == "Mercedes-AMG CLE 63"
+        ) {
+          amountInput.value = "35,000 $";
+        } else if (
+          selectedMarkType == "Mercedes-Benz CLE Convertible" ||
+          selectedMarkType == "Mercedes-AMG GLC 43 and 63 Coupe"
+        ) {
+          amountInput.value = "30,000 $";
+        } else if (
+          selectedMarkType == "Mercedes-Benz E-Class All-Terrain" ||
+          selectedMarkType == "M8 Coupe"
+        ) {
+          amountInput.value = "37,500 $";
+        } else if (
+          selectedMarkType == "M8 Convertible" ||
+          selectedMarkType == "M8 Gran Coupe" ||
+          selectedMarkType == "Mercedes-AMG E 53"
+        ) {
+          amountInput.value = "40,000 $";
+        } else {
+          amountInput.value = ""; // Set a default amount or leave it empty
+        }
+      }
+      function CarObject(
+        mark,
+        marktype,
+        year,
+        plateNb,
+        amount,
+        ClientName,
+        email,
+        phoneNb,
+        nationality
+      ) {
+        this.carMark = mark;
+        this.markType = marktype;
+        this.Year = year;
+        this.plateNb = plateNb;
+        this.amount = amount;
+        this.clientName = ClientName;
+        this.email = email;
+        this.phoneNb = phoneNb;
+        this.nationality = nationality;
+      }
+
+      function showNatOther() {
+        v1 = rent.nationality.value;
+        if (v1 == "Other") {
+          natOtherDiv.style.visibility = "visible";
+        } else {
+          natOtherDiv.style.visibility = "hidden";
+        }
+      }
+
+      function checkErrors() {
+        var reProperName = /^[A-Z][A-Za-z']+$/;
+        var fname = rent.fname.value;
+        var lname = rent.lname.value;
+        var email = rent.email.value;
+        var phoneNb1 = rent.phoneNb1.value;
+        var phoneNb2 = rent.phoneNb2.value;
+        var phoneNb3 = rent.phoneNb3.value;
+
+        var error = 0;
+        if (!reProperName.test(fname)) {
+          fnameDiv.style.visibility = "visible";
+          error++;
+        } else {
+          fnameDiv.style.visibility = "hidden";
+        }
+        if (!reProperName.test(lname)) {
+          lnameDiv.style.visibility = "visible";
+          error++;
+        } else {
+          lnameDiv.style.visibility = "hidden";
+        }
+        if (
+          email.indexOf("@") == -1 ||
+          email.indexOf(".") == -1 ||
+          email == ""
+        ) {
+          emDiv.style.visibility = "visible";
+          error++;
+        } else {
+          emDiv.style.visibility = "hidden";
+        }
+        if (
+          phoneNb1.length != 2 ||
+          phoneNb2.length != 3 ||
+          phoneNb3.length != 3
+        ) {
+          phoneDiv.style.visibility = "visible";
+          error++;
+        } else {
+          phoneDiv.style.visibility = "hidden";
+        }
+        if (error > 0) {
+          document.getElementById("saveBtn").disabled = true;
+          document.getElementById("showAllBtn").disabled = true;
+        } else {
+          // Enable Save and Show All buttons if there are no errors
+          document.getElementById("saveBtn").disabled = false;
+          document.getElementById("showAllBtn").disabled = false;
+        }
+      }
+
+      function saveInfo() {
+        var natOther = rent.natOther.value;
+
+        if (natOther == "") {
+          nationalityOther = "Lebanese";
+        } else {
+          nationalityOther = natOther;
+        }
+
+        // Check for errors before saving
+        checkErrors();
+        var saveBtn = document.getElementById("saveBtn");
+
+        if (saveBtn.disabled) {
+          // There are errors, display an alert or message to the user
+          alert("Please fill in all required fields correctly before saving.");
+          return;
+        }
+        var carInfo = new CarObject(
+          rent.mark.value,
+          rent.marktype.value,
+          rent.year.value,
+          rent.plate.value,
+          rent.amount.value,
+          rent.fname.value + " " + rent.lname.value,
+          rent.email.value,
+          rent.phoneNb1.value +
+            " " +
+            rent.phoneNb2.value +
+            " " +
+            rent.phoneNb3.value, // Combine the phone numbers
+          nationalityOther
+        );
+        arrInfo[i] = carInfo;
+        i++;
+
+        // Clear values and hide clientInfo
+        rent.mark.value = "Choose...";
+        rent.marktype.value = "Choose...";
+        rent.year.value = "2022";
+        rent.plate.value = "";
+        rent.amount.value = "";
+        rent.fname.value = "";
+        rent.lname.value = "";
+        rent.email.value = "";
+        rent.phoneNb1.value = "";
+        rent.phoneNb2.value = "";
+        rent.phoneNb3.value = "";
+        rent.nationality.value = "Leb";
+        rent.natOther.value = "";
+        clientInfo.style.visibility = "hidden";
+        natOtherDiv.style.visibility = "hidden";
+      }
+      function showTable() {
+        t =
+          "<table class='table table-striped' border=1 align=center><tr><td>Mark Type</td><td>Year</td><td>Plate Number</td><td>Client Name</td><td>Email</td><td>Phone Number</td><td>Nationality</td><td>Amount</td></tr>";
+        for (j = 0; j < arrInfo.length; j++) {
+          t =
+            t +
+            "<tr><td>" +
+            arrInfo[j].markType +
+            "</td><td>" +
+            arrInfo[j].Year +
+            "</td><td>" +
+            arrInfo[j].plateNb +
+            "</td><td>" +
+            arrInfo[j].clientName +
+            "</td><td>" +
+            arrInfo[j].email +
+            "</td><td>" +
+            arrInfo[j].phoneNb +
+            "</td><td>" +
+            arrInfo[j].nationality +
+            "</td><td>" +
+            arrInfo[j].amount +
+            "</td></tr>";
+        }
+        t = t + "</table>";
+        document.getElementById("tab").innerHTML = t;
+      }
+    </script>
+    <style>
+      body,
+      form {
+        background: linear-gradient(45deg, #00ff00, #019701, #0000ff);
+      }
+      fieldset {
+        color: #085e08;
+      }
+      legend {
+        color: #fff;
+        font-size: 30px;
+        font-weight: bold;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      .alert {
+        color: white;
+        font-size: medium;
+        padding: 2px;
+        border: 2px solid #fff;
+        border-radius: 15px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        background-color: #019701;
+      }
+    </style>
+  </head>
+  <body onload="msg()">
+    <form name="rent" class="px-5 mt-5 form-control">
+      <fieldset>
+        <legend>Car Information</legend>
+        <div class="row">
+          <div class="col-md-2 fs-5">
+            <label for="mark" class="form-label">Mark</label>
+          </div>
+          <div class="col-md-3">
+            <select
+              id="mark"
+              name="mark"
+              class="form-select"
+              onclick="showSlectedMark()"
+            >
+              <option selected>Choose...</option>
+              <option>Mercedes</option>
+              <option>BMW</option>
+            </select>
+          </div>
+          <div class="col-md-4" id="markDiv" style="visibility: hidden">
+            <label class="alert">Mark is required...</label>
+          </div>
+        </div>
+        <div class="row mt-4">
+          <div class="col-md-2 fs-5">
+            <label for="marktype" class="form-label">Mark Type</label>
+          </div>
+          <div class="col-md-3">
+            <select
+              id="marktype"
+              name="marktype"
+              class="form-select"
+              onchange="setAmount()"
+            >
+              <option selected>Choose...</option>
+            </select>
+          </div>
+          <div class="col-md-4" id="marktypeDiv" style="visibility: hidden">
+            <label class="alert">Mark type is required...</label>
+          </div>
+        </div>
+        <div class="row mt-4">
+          <div class="col-md-2 fs-5">
+            <label for="year" class="form-label">Year</label>
+          </div>
+          <div class="col-md-3">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="year"
+              id="year"
+              value="2022"
+            />
+            <label class="form-check-label" for="year"> 2022 </label>
+            <input
+              class="form-check-input"
+              type="radio"
+              name="year"
+              id="year"
+              value="2023"
+            />
+            <label class="form-check-label" for="year"> 2023 </label>
+            <input
+              class="form-check-input"
+              type="radio"
+              name="year"
+              id="year"
+              value="2024"
+            />
+            <label class="form-check-label" for="year"> 2024 </label>
+          </div>
+          <div class="col-md-4" id="yearDiv" style="visibility: hidden">
+            <label class="alert">Year is required...</label>
+          </div>
+        </div>
+        <div class="row mt-4">
+          <div class="col-md-2 fs-5">
+            <label for="plate" class="form-label">Plate Number</label>
+          </div>
+          <div class="col-md-3">
+            <input
+              type="text"
+              name="plate"
+              id="plate"
+              class="form-control"
+              placeholder="Enter plate number"
+            />
+          </div>
+          <div class="col-md-4" id="plateNbDiv" style="visibility: hidden">
+            <label class="alert">Plate number is required...</label>
+          </div>
+        </div>
+
+        <div class="row mt-4">
+          <div class="col-md-2 fs-5">
+            <label for="amount" class="form-label">Amount</label>
+          </div>
+          <div class="col-md-3">
+            <input
+              type="text"
+              name="amount"
+              id="amount"
+              class="form-control"
+              disabled
+            />
+          </div>
+        </div>
+        <div class="row mt-4">
+          <div class="col-md-3">
+            <input
+              type="button"
+              class="btn btn-primary"
+              value="Rent this car"
+              onclick="reqInformation()"
+            />
+          </div>
+        </div>
+      </fieldset>
+      <br /><br />
+      <div id="clientInfo" style="visibility: hidden">
+        <fieldset>
+          <legend>Client Information</legend>
+          <div class="row mt-4">
+            <div class="col-md-2 fs-5">
+              <label for="fname" class="form-label">First Name</label>
+            </div>
+            <div class="col-md-3">
+              <input
+                type="text"
+                name="fname"
+                id="fname"
+                class="form-control"
+                placeholder="Enter your first name"
+                oninput="checkErrors()"
+                size="20"
+              />
+            </div>
+            <div class="col-md-4" id="fnameDiv" style="visibility: hidden">
+              <label class="alert">Your first name is required...</label>
+            </div>
+          </div>
+          <div class="row mt-4">
+            <div class="col-md-2 fs-5">
+              <label for="lname" class="form-label">Last Name</label>
+            </div>
+            <div class="col-md-3">
+              <input
+                type="text"
+                name="lname"
+                id="lname"
+                class="form-control"
+                placeholder="Enter your last name"
+                oninput="checkErrors()"
+                size="20"
+              />
+            </div>
+            <div class="col-md-4" id="lnameDiv" style="visibility: hidden">
+              <label class="alert">Your last name is required...</label>
+            </div>
+          </div>
+          <div class="row mt-4">
+            <div class="col-md-2 fs-5">
+              <label for="email" class="form-label">Email</label>
+            </div>
+            <div class="col-md-3">
+              <input
+                type="email"
+                name="email"
+                id="email"
+                class="form-control"
+                placeholder="Enter your email"
+                oninput="checkErrors()"
+                size="25"
+              />
+            </div>
+            <div class="col-md-4" id="emDiv" style="visibility: hidden">
+              <label class="alert"
+                >Re-enter your email address. Should contain @ and .</label
+              >
+            </div>
+          </div>
+          <div class="row mt-4">
+            <div class="col-md-2 fs-5">
+              <label for="phoneNb" class="form-label">Phone Number</label>
+            </div>
+            <div class="col-md-1">
+              <input
+                type="text"
+                name="phoneNb1"
+                id="phoneNb"
+                class="form-control"
+                placeholder="xx"
+                oninput="checkErrors()"
+                size="2"
+              />
+            </div>
+            <div class="col-md-1">
+              <input
+                type="text"
+                name="phoneNb2"
+                id="phoneNb"
+                class="form-control"
+                placeholder="xxx"
+                oninput="checkErrors()"
+                size="4"
+              />
+            </div>
+            <div class="col-md-1">
+              <input
+                type="text"
+                name="phoneNb3"
+                id="phoneNb"
+                class="form-control"
+                placeholder="xxx"
+                oninput="checkErrors()"
+                size="4"
+              />
+            </div>
+            <div class="col-md-4" id="phoneDiv" style="visibility: hidden">
+              <label class="alert"
+                >Re-enter your phone number. +961-xx-xxx-xxx</label
+              >
+            </div>
+          </div>
+          <div class="row mt-4">
+            <div class="col-md-2 fs-5">
+              <label for="nationality" class="form-label">Nationality</label>
+            </div>
+            <div class="col-md-3">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="nationality"
+                id="nationality"
+                value="Leb"
+                onchange="showNatOther()"
+              />
+              <label class="form-check-label" for="nationality">
+                Lebanese
+              </label>
+              <input
+                class="form-check-input"
+                type="radio"
+                name="nationality"
+                id="nationality"
+                value="Other"
+                onchange="showNatOther()"
+              />
+              <label class="form-check-label" for="nationality"> Other </label>
+            </div>
+          </div>
+          <div class="row mt-4">
+            <div class="col-md-2 fs-5"></div>
+            <div class="col-md-3">
+              <input
+                type="text"
+                name="natOther"
+                class="form-control"
+                placeholder="Enter your nationality"
+                size="20"
+                style="visibility: hidden"
+                id="natOtherDiv"
+              />
+            </div>
+          </div>
+          <div class="row mt-4">
+            <div class="col-md-2">
+              <input
+                type="button"
+                class="btn btn-primary"
+                value="Save"
+                id="saveBtn"
+                onclick="saveInfo()"
+              />
+            </div>
+            <div class="col-md-3">
+              <input
+                type="button"
+                class="btn btn-primary"
+                value="Show All"
+                id="showAllBtn"
+                onclick="showTable()"
+              />
+            </div>
+          </div>
+        </fieldset>
+      </div>
+      <br /><br />
+      <div id="tab"></div>
+    </form>
+  </body>
+</html>
